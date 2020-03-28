@@ -105,3 +105,22 @@
 ;;     {:day 18, :location "Northern Ireland", :cases 95.79273815672464}
 ;;     {:day 19, :location "Northern Ireland", :cases 110.8944421913114})
 
+
+;; Line plot
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(def line-plot
+  "Transform data for visualization"
+  {:mark     "line"
+   :data     {:values (mock-data-set "England" "Scotland" "Wales" "Northern Ireland")}
+   :encoding {:x     {:field "day" :type "quantitative"}
+              :y     {:field "cases" :type "quantitative"}
+              :color {:field "location" :type "nominal"}}})
+
+;; Notes:
+;; The encoding field names match the keywords in the data values
+;; TODO: review the available types
+
+;; Send visualization to Oz server
+(oz/view! line-plot)
+
