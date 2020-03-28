@@ -124,3 +124,21 @@
 ;; Send visualization to Oz server
 (oz/view! line-plot)
 
+
+;; Stacked bar
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(def stacked-bar
+  {:mark     "bar"
+   :data     {:values (mock-data-set "England" "Scotland" "Wales" "Norther Ireland")}
+   :encoding {:x     {:field "day"
+                      :type  "ordinal"}
+              :y     {:aggregate "location"
+                      :field     "cases"
+                      :type      "quantitative"}
+              :color {:field "location"
+                      :type  "nominal"}}})
+
+(oz/view! stacked-bar)
+
+
