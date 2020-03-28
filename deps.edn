@@ -2,7 +2,9 @@
  ["src" "test" "resources"]
 
  :deps
- {org.clojure/clojure {:mvn/version "1.10.1"}}
+ {org.clojure/clojure {:mvn/version "1.10.1"}
+
+  metasoarous/oz {:mvn/version "1.6.0-alpha6"}}
 
  :aliases
  {:test
