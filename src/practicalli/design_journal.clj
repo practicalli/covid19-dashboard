@@ -142,3 +142,15 @@
 (oz/view! stacked-bar)
 
 
+;; Dashboard
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(def dashboard
+  [:div
+   [:h1 "COVID19 Tracker - Mock data"]
+   [:p "Mock data to experiment with types of views"]
+   [:div {:style {:display "flex" :flex-direction "row"}}
+    [:vega-lite line-plot]
+    [:vega-lite stacked-bar]]])
+
+(oz/view! dashboard)
