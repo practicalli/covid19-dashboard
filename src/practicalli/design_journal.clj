@@ -206,6 +206,31 @@ covid-uk-daily-indicators
 
 
 
+;; Adding daily indicators
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(def dashboard-headlines
+  [:div
+   [:h1 "COVID19 Tracker - Mock data"]
+   [:p (str "Headline figures for: " (get covid-uk-daily-indicators-map "DateVal"))]
+   [:div {:style {:display "flex" :flex-direction "row"}}
+    [:h2 (str "Total UK Cases:"  (get covid-uk-daily-indicators-map "TotalUKCases"))]
+    [:h2 (str "England Cases: "  (get covid-uk-daily-indicators-map "EnglandCases"))]
+    [:h2 (str "Scotland Cases: "  (get covid-uk-daily-indicators-map "ScotlandCases"))]
+    ]
+   [:div {:style {:display "flex" :flex-direction "row"}}
+    [:vega-lite line-plot]
+    [:vega-lite stacked-bar]]])
+
+(oz/view! dashboard-headlines)
+
+
+;; TODO:
+;; Set own colours
+;; Add some bootstrap to make the headlines look nicer
+;; Investigate other graphs
+
+
 ;; Alternative: semantic-csv
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (require '[semantic-csv.core :as semantic])
