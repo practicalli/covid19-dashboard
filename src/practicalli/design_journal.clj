@@ -144,6 +144,8 @@
 
 ;; Dashboard
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Define a dashboard using the hiccup syntax, including calls to the two views.
+
 
 (def dashboard
   [:div
@@ -154,3 +156,96 @@
     [:vega-lite stacked-bar]]])
 
 (oz/view! dashboard)
+
+;; Reading in CSV data
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require '[clojure.java.io :as io])
+(require '[clojure.data.csv :as csv])
+
+
+(def covid-uk-daily-indicators
+  (csv/read-csv
+    (slurp
+      (io/resource "data/daily-indicators.csv"))))
+
+
+covid-uk-daily-indicators
+;; => (["DateVal"
+;;      "TotalUKCases"
+;;      "NewUKCases"
+;;      "TotalUKDeaths"
+;;      "DailyUKDeaths"
+;;      "EnglandCases"
+;;      "EnglandDeaths"
+;;      "ScotlandCases"
+;;      "ScotlandDeaths"
+;;      "WalesCases"
+;;      "WalesDeaths"
+;;      "NICases"
+;;      "NIDeaths"]
+;;     ["3/27/2020"
+;;      "14,543"
+;;      "  2,885"
+;;      "759"
+;;      "181"
+;;      " 12,288"
+;;      "    679"
+;;      "1,059"
+;;      "33"
+;;      "921"
+;;      "34"
+;;      "275"
+;;      "13"])
+
+(zipmap (first covid-uk-daily-indicators) (second covid-uk-daily-indicators))
+;; => {"TotalUKDeaths" "759", "DailyUKDeaths" "181", "EnglandCases" " 12,288", "EnglandDeaths" "    679", "TotalUKCases" "14,543", "WalesCases" "921", "ScotlandDeaths" "33", "DateVal" "3/27/2020", "NewUKCases" "  2,885", "WalesDeaths" "34", "NICases" "275", "ScotlandCases" "1,059", "NIDeaths" "13"}
+
+(def covid-uk-daily-indicators-map
+  (zipmap (first covid-uk-daily-indicators) (second covid-uk-daily-indicators)))
+
+
+
+;; Alternative: semantic-csv
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(require '[semantic-csv.core :as semantic])
+
+(def data
+  (with-open [in-file (io/reader "resources/data/daily-indicators.csv")]
+    (->>
+      (csv/parse-csv in-file)
+      (semantic/remove-comments)
+      (semantic/mappify)
+      #_(semantic/cast-with {:this ->int})
+      doall)))
+
+(csv/read-csv )
+
+(def covid-uk-daily-indicators-maps
+  (semantic/mappify
+    (csv/read-csv
+      (slurp
+        (io/resource "data/daily-indicators.csv")))))
+
+covid-uk-daily-indicators-map
+
+;; As a threading macro
+
+(->> "data/daily-indicators.csv"
+     io/resource
+     slurp
+     csv/read-csv
+     semantic/mappify
+     )
+;; => ({:TotalUKCases "14,543", :EnglandDeaths "    679", :ScotlandCases "1,059", :DateVal "3/27/2020", :NIDeaths "13", :TotalUKDeaths "759", :DailyUKDeaths "181", :NewUKCases "  2,885", :WalesCases "921", :WalesDeaths "34", :NICases "275", :ScotlandDeaths "33", :EnglandCases " 12,288"})
+
+
+
+(def covid-uk-daily-indicators-map-converted
+  (->> "data/daily-indicators.csv"
+       io/resource
+       slurp
+       csv/read-csv
+       semantic/mappify
+       semantic/->long )
+  )
