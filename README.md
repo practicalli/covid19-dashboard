@@ -2,6 +2,8 @@
 
 A dashboard created with [Oz](https://github.com/metasoarous/oz) as an example of data science visualization.
 
+![Covid19 tracker - Oz dashboard](resources/covid19-tracker-oz-dashboard.png)
+
 ## Installation
 
 Download from https://github.com/practicalli/covid19-dashboard.
