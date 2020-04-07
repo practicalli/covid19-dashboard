@@ -258,6 +258,126 @@ covid-uk-daily-indicators
 
 (oz/view! dashboard-headlines-bootstrap)
 
+
+;; Using Bulma instead of Bootstrap, as its more developer friendly
+;; https://bulma.io/
+
+(def dashboard-headlines-bulma
+  [:div
+   ;; Web page meta data
+   [:link {:rel  "stylesheet"
+           :href "https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css"}]
+
+   ;; Web page structure and content
+
+   ;; Heading
+   [:section {:class "hero is-dark is-bold"}
+    [:div {:class "hero-body"}
+     [:div {:class "container"}
+      [:h1 {:class "title is-family-primary"}
+       "COVID19 Tracker - Mock data"]
+      [:h2 {:class "subtitle"}
+       "Data will be extracted from "
+       [:a {:href "https://www.gov.uk/government/publications/covid-19-track-coronavirus-cases"} "Gov.UK"]]]]]
+
+   ;; Daily Headline figures
+   [:section {:class "section has-text-centered"}
+    #_[:h1 (str "Headline figures for: " (get covid-uk-daily-indicators-map "DateVal"))]
+
+    ;; UK Totals
+
+    [:div {:class "columns"}
+
+     ;; UK cumulative totals
+     [:div {:class "column is-half"}
+      [:div {:class "card"}
+       [:div {:class "card-content"}
+        [:div {:class "title "}
+         [:h2 {:class "is-family-primary"}
+          "Cumulative UK Totals "]
+         [:h1 {:class "has-text-primary is-family-primary"
+               :style {:font-size "5rem"}}
+          (str (get covid-uk-daily-indicators-map "TotalUKCases"))]
+         [:h2 {:style {:color "hsl(300, 100%, 25%)"}}
+          "5,373"]]]]]
+
+     ;; UK daily totals
+     [:div {:class "column is-half"}
+      [:div {:class "card"}
+       [:div {:class "card-content"}
+        [:div {:class "title"}
+         [:h2 {:class "is-family-primary"}
+          "Daily Totals"]
+         [:h1 {:class "has-text-primary is-family-primary"
+               :style {:font-size "5rem"}}
+          (str (str (get covid-uk-daily-indicators-map "DailyUKDeaths")))]
+         [:h2 {:style {:color "hsl(300, 100%, 25%)"}}
+          "439"]]]]]]
+
+    ;; Country Cases
+
+    [:div {:class "columns"}
+
+     ;; Total cases in England
+     [:div {:class "column is-one-quarter"}
+      [:div {:class "card"}
+       [:div {:class "card-content"}
+        [:div {:class "title"}
+         [:h2 {:class "is-family-primary"}
+          "England"]
+         [:h1 {:class "has-text-primary is-family-primary"}
+          (str (get covid-uk-daily-indicators-map "EnglandCases"))]
+         [:h2 {:style {:color "hsl(300, 100%, 25%)"}}
+          (get covid-uk-daily-indicators-map "EnglandDeaths")]]]]]
+
+     ;; Total Cases in Scotland
+     [:div {:class "column is-one-quarter"}
+      [:div {:class "card"}
+       [:div {:class "card-content has-text-centered"}
+        [:div {:class "title"}
+         [:h2 {:class "is-family-primary"}
+          "Scotland"]
+         [:h1 {:class "has-text-primary is-family-primary"}
+          (str (get covid-uk-daily-indicators-map "ScotlandCases"))]
+         [:h2 {:style {:color "hsl(300, 100%, 25%)"}}
+          (get covid-uk-daily-indicators-map "ScotlandDeaths")]]]]]
+
+     ;; Total Cases in Wales
+     [:div {:class "column is-one-quarter"}
+      [:div {:class "card"}
+       [:div {:class "card-content has-text-centered"}
+        [:div {:class "title"}
+         [:h2 {:class "is-family-primary"}
+          "Wales"]
+         [:h1 {:class "has-text-primary is-family-primary"}
+          (str (get covid-uk-daily-indicators-map "WalesCases"))]
+         [:h2 {:style {:color "hsl(300, 100%, 25%)"}}
+          (str (get covid-uk-daily-indicators-map "WalesDeaths"))]]]]]
+
+     ;; Total Cases in Northern Ireland
+     [:div {:class "column is-one-quarter"}
+      [:div {:class "card"}
+       [:div {:class "card-content has-text-centered"}
+        [:div {:class "title"}
+         [:h2 {:class "is-family-primary"}
+          "Northern Ireland"]
+         [:h1 {:class "is-family-primary has-text-primary"}
+          (str (get covid-uk-daily-indicators-map "NICases"))]
+         [:h2 {:style {:color "hsl(300, 100%, 25%)"}}
+          (str (get covid-uk-daily-indicators-map "NIDeaths"))]]]]]    ]
+
+    ]
+   ;; End of Headline figures
+
+   ;; Oz visualization
+   [:section {:class "section"}
+    [:vega-lite line-plot]
+    [:vega-lite stacked-bar]]])
+
+
+(oz/view! dashboard-headlines-bulma)
+
+
 ;; TODO:
 ;; Set own colours
 ;; Add some bootstrap to make the headlines look nicer
