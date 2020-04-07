@@ -7,8 +7,14 @@ A dashboard created with [Oz](https://github.com/metasoarous/oz) as an example o
 Download from https://github.com/practicalli/covid19-dashboard.
 
 ## Usage
+Open the `src/practicalli/design_journal.clj` file in a Clojure aware editor and start a Clojure REPL.
 
-FIXME: explanation
+Evaluate the whole namespace to ensure all data generators and views are loaded into the REPL.  A browser window will open and may display a series of different visualizations in quick succession.
+
+Review the code and evaluate the `(oz/view!)` expressions to see individual visualizations.
+
+
+## General actions
 
 Run the project directly:
 
