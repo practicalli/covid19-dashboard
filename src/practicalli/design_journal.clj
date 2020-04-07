@@ -225,6 +225,39 @@ covid-uk-daily-indicators
 (oz/view! dashboard-headlines)
 
 
+;; Improving design with a CSS framework
+;; Including CSS from a content delivery network (CDN)
+
+(def dashboard-headlines-bootstrap
+  [:div
+   [:link {:rel         "stylesheet"
+           :href        "https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+           :integrity   "sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+           :crossorigin "anonymous"}]
+   [:div {:class "jumbotron"}
+    [:h1 {:class "display-4"}
+     "COVID19 Tracker - Mock data"]]
+
+   [:h3 (str "Headline figures for: " (get covid-uk-daily-indicators-map "DateVal"))]
+
+   [:div {:style {:display "flex" :flex-direction "row"}}
+    [:div {:class "card"}
+     [:div {:class "card-title"}
+      [:h2 (str "Total UK Cases:"  (get covid-uk-daily-indicators-map "TotalUKCases"))]]]
+    [:div {:class "card"}
+     [:div {:class "card-title"}
+      [:h2 (str "Scotland Cases: "  (get covid-uk-daily-indicators-map "ScotlandCases"))]   ]]
+    [:div {:class "card"}
+     [:div {:class "card-title"}
+      [:h2 (str "England Cases: "  (get covid-uk-daily-indicators-map "EnglandCases"))]]]]
+
+   [:div {:style {:display "flex" :flex-direction "row"}}
+    [:vega-lite line-plot]
+    [:vega-lite stacked-bar]]])
+
+
+(oz/view! dashboard-headlines-bootstrap)
+
 ;; TODO:
 ;; Set own colours
 ;; Add some bootstrap to make the headlines look nicer
