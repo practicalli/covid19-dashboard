@@ -378,6 +378,100 @@ covid-uk-daily-indicators
 (oz/view! dashboard-headlines-bulma)
 
 
+
+;; Refactor dashboard with section generators
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn headline-card-total
+  "Generate a card for headline figures, to be used in an Oz dashboard"
+  [totals]
+  [:div {:class "column is-half"}
+   [:div {:class "card"}
+    [:div {:class "card-content"}
+     [:div {:class "title "}
+      [:h2 {:class "is-family-primary"}
+       (:name totals)]
+      [:h1 {:class "has-text-primary is-family-primary"
+            :style {:font-size "5rem"}}
+       (str (get covid-uk-daily-indicators-map (:type totals)))]
+      [:h2 {:style {:color "hsl(300, 100%, 25%)"}}
+       "5,373"]]]]]
+  )
+
+
+(defn headline-card-country
+  "Generate a card for headline figures, to be used in an Oz dashboard"
+  [country]
+  [:div {:class "column is-one-quarter"}
+   [:div {:class "card"}
+    [:div {:class "card-content has-text-centered"}
+     [:div {:class "title"}
+      [:h2 {:class "is-family-primary"}
+       (:name country)]
+      [:h1 {:class "is-family-primary has-text-primary"}
+       (str (get covid-uk-daily-indicators-map (str (:alias country)) "Cases"))]
+      [:h2 {:style {:color "hsl(300, 100%, 25%)"}}
+       (str (get covid-uk-daily-indicators-map (str (:alias country)) "Deaths"))]]]]]
+  )
+
+
+
+(def dashboard-headlines-bulma-generators
+  [:div
+   ;; Web page meta data
+   [:link {:rel  "stylesheet"
+           :href "https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css"}]
+
+   ;; Web page structure and content
+
+   ;; Heading
+   [:section {:class "hero is-dark is-bold"}
+    [:div {:class "hero-body"}
+     [:div {:class "container"}
+      [:h1 {:class "title is-family-primary"}
+       "COVID19 Tracker - Mock data"]
+      [:h2 {:class "subtitle"}
+       "Data will be extracted from "
+       [:a {:href "https://www.gov.uk/government/publications/covid-19-track-coronavirus-cases"} "Gov.UK"]]]]]
+
+   ;; Daily Headline figures
+   [:section {:class "section has-text-centered"}
+    #_[:h1 (str "Headline figures for: " (get covid-uk-daily-indicators-map "DateVal"))]
+
+    ;; UK Totals
+    [:div {:class "columns"}
+     ;; UK cumulative totals
+     (headline-card-total {:name "Cumulative UK Totals " :type "TotalUKCases"})
+
+     ;; UK daily totals
+     (headline-card-total {:name "Daily Totals" :type "DailyUKDeaths"})]
+
+    ;; Country Cases
+    [:div {:class "columns"}
+
+     ;; Total cases in England
+     (headline-card-country {:name "England" :alias "England"})
+
+     ;; Total Cases in Scotland
+     (headline-card-country {:name "Scotland" :alias "Scotland"})
+
+     ;; Total Cases in Wales
+     (headline-card-country {:name "Wales" :alias "Wales"})
+
+     ;; Total Cases in Northern Ireland
+     (headline-card-country {:name "Northern Ireland" :alias "NI"})
+     ]
+    ]
+   ;; End of Headline figures
+
+   ;; Oz visualization
+   [:section {:class "section"}
+    [:vega-lite line-plot]
+    [:vega-lite stacked-bar]]])
+
+
+(oz/view! dashboard-headlines-bulma-generators)
+
 ;; TODO:
 ;; Set own colours
 ;; Add some bootstrap to make the headlines look nicer
