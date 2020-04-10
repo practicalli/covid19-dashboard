@@ -22,9 +22,9 @@
        (:name totals)]
       [:h1 {:class "has-text-primary is-family-primary"
             :style {:font-size "5rem"}}
-       (str (get data-set (:type totals)))]
+       (str (get data-set (str (:type totals) "Cases")))]
       [:h2 {:style {:color "hsl(300, 100%, 25%)"}}
-       "5,373"]]]]]
+       (str (get data-set (str (:type totals) "Deaths")))]]]]]
   )
 
 
