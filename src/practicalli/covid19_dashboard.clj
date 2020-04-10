@@ -32,12 +32,12 @@
     [:div {:class "columns"}
      ;; UK cumulative totals
      (view-helpers/headline-card-total
-       data-gov-uk/covid19-uk-data-latest
-       {:name "Cumulative UK Totals " :type "TotalUKCases"})
+       data-gov-uk/covid19-uk-data-latest-fixed
+       {:name "Cumulative UK Totals " :type "TotalUK"})
 
      (view-helpers/headline-card-total
-       data-gov-uk/covid19-uk-data-latest
-       {:name "Daily Totals" :type "DailyUKDeaths"})]
+       data-gov-uk/covid19-uk-data-latest-fixed
+       {:name "Daily Totals" :type "DailyUK"})]
 
     ;; Country Cases
     [:div {:class "columns"}
