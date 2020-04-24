@@ -1,5 +1,15 @@
 (ns practicalli.design-journal
-  (:require [oz.core :as oz]))
+  (:require
+
+   ;; Extract and Transform data
+   [clojure.java.io   :as io]
+   [clojure.data.csv  :as csv]
+   [semantic-csv.core :as semantic-csv]
+   [jsonista.core     :as json]
+
+   ;; Visualization
+   [oz.core :as oz]
+   ))
 
 
 ;; Oz server listening on a websocket for views to display.
