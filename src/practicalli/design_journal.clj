@@ -616,3 +616,50 @@ covid-uk-daily-indicators-map
   (uk-data-view covid19-cases-england-combined "Upper tier local authority"))
 
 
+
+
+;; New data as Clojure hash-maps
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; convert data to maps with headings as keys
+;; semantic-csv
+
+(semantic-csv/mappify
+  (csv/read-csv
+    (slurp
+      (io/resource "data-sets/coronavirus-cases-UK-contry-region-local-authority-gov-uk.csv"))))
+
+;; Example data
+
+;; :Area name = "England"
+;; :Area code = "E92000001"
+;; :Area type = "Country"
+;; :Specimen date = "2020-04-14"
+;; :Daily lab-confirmed cases = "134"
+;; :Cumulative lab-confirmed cases = "76371"
+
+
+(->> "data-sets/coronavirus-cases-UK-contry-region-local-authority-gov-uk.csv"
+     io/resource
+     slurp
+     csv/read-csv
+     semantic-csv/mappify)
+
+
+;; Define a function (using threading macro to show the sequence of actions)
+
+(defn csv->clj-hash-map
+  "Convert CSV file to sequence of hash maps.
+  Each hash-map uses the heading text as a key
+  for each element in the row of data.
+
+  Return: a sequence of hash-maps"
+  [data-source]
+  (->> data-source
+       io/resource
+       slurp
+       csv/read-csv
+       semantic-csv/mappify))
+
+(def covid19-cases-uk-combined
+  (csv->clj-hash-map "data-sets/coronavirus-cases-UK-contry-region-local-authority-gov-uk.csv"))
+
