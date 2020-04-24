@@ -897,3 +897,76 @@ covid-uk-daily-indicators-map
 
 ;; now use england-lad-geojson-with-cases as the data for our view.
 
+
+;; Create an Oz view with the combind GeoJSON and Gov.uk data
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(oz/view!
+  {:title    {:text "COVID19 cases in England Hospitals"}
+   :height   1000
+   :width    920
+   :data     {:name   "England"
+              :values england-lad-geojson-with-cases
+              :format {:property "features"}},
+   :mark     {:type "geoshape" :stroke "white" :strokeWidth 0.5}
+   :encoding {:color {:field "Cases",
+                      :type  "quantitative"
+                      :scale {:domain [0 120000]}}
+              }})
+
+;; The scale is hard coded, so it would need to be adjusted
+;; each time the data changes to make sure its an appropriate size
+;; Use the data to determine the maximum value
+
+(map
+  #(get % "Cumulative lab-confirmed cases")
+  covid19-cases-uk-englad-lad)
+
+
+(apply max (map
+             #(get % "Cumulative lab-confirmed cases")
+             covid19-cases-uk-englad-lad))
+
+;; Need to convert strings to numbers first
+
+(map
+  #(Integer/parseInt (get % "Cumulative lab-confirmed cases"))
+  covid19-cases-uk-englad-lad)
+
+(apply max (map
+             #(Integer/parseInt (get % "Cumulative lab-confirmed cases"))
+             covid19-cases-uk-englad-lad))
+
+
+(defn maximum-cases
+  "Calculates the maximum value of cases"
+  [data-set]
+  (apply max
+         (map
+           #(Integer/parseInt
+              (get % "Cumulative lab-confirmed cases"))
+           data-set)))
+
+;; Update the view to calculate the maximum scale
+
+(oz/view!
+  {:title    {:text "COVID19 cases in England Hospitals"}
+   :height   1000
+   :width    920
+   :data     {:name   "England"
+              :values england-lad-geojson-with-cases
+              :format {:property "features"}},
+   :mark     {:type "geoshape" :stroke "white" :strokeWidth 0.5}
+   :encoding {:color
+              {:field "Cases",
+               :type  "quantitative"
+               :scale {:domain [0 (maximum-cases covid19-cases-uk-englad-lad)]}}
+              }})
+
+
+;; Using a smaller scale highlights issues with the data.
+;; It could be showing a difference between the geo-data
+;; and gov.uk data sets in the names used for local area districts.
+;; Or perhaps the values for the districts are not being used correctly.
+;; Having the a scale that is too large can be misleading
+
