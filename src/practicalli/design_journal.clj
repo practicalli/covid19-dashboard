@@ -677,3 +677,45 @@ covid-uk-daily-indicators-map
 
 
 {"key with space" "value"}
+
+;; Refactor the cvs->clj-hash-map
+
+(defn csv->clj-hash-map
+  "Convert CSV file to sequence of hash maps.
+  Each hash-map uses the heading text as a key
+  for each element in the row of data.
+
+  Return: a sequence of hash-maps"
+  [data-source]
+  (->> data-source
+       io/resource
+       slurp
+       csv/read-csv
+       (semantic-csv/mappify {:keyify false} )))
+
+(def covid19-cases-uk-combined
+  (csv->clj-hash-map "data-sets/coronavirus-cases-UK-contry-region-local-authority-gov-uk.csv"))
+
+(keys (first covid19-cases-uk-combined))
+;; => ("Area name" "Area code" "Area type" "Specimen date" "Daily lab-confirmed cases" "Cumulative lab-confirmed cases")
+
+
+(filter #(= "Country" (get % "Area type")) covid19-cases-uk-combined)
+
+
+(defn uk-data-view-hash-map
+  "Specific view of a given data set based on location"
+  [data-set location]
+  (filter #(= location (get % "Area type")) data-set))
+
+(def covid19-cases-uk-contries
+  (uk-data-view-hash-map covid19-cases-uk-combined "Country"))
+
+(def covid19-cases-uk-regions
+  (uk-data-view-hash-map covid19-cases-uk-combined "Regions"))
+
+(def covid19-cases-uk-englad-lad
+  (uk-data-view-hash-map covid19-cases-uk-combined "Upper tier local authority"))
+
+
+
