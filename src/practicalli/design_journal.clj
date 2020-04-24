@@ -540,3 +540,49 @@ covid-uk-daily-indicators-map
        semantic/mappify
        semantic/->long )
   )
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; GOV.UK Data set change - 16 April 2020
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Data format has changed again
+
+;; Cases combined country, region, local area districts
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Convert cases to a sequence of vectors
+
+(defn csv->clj
+  [data-file]
+  (csv/read-csv
+    (slurp
+      (io/resource data-file))))
+
+;; Returns a sequence of vectors, the first vector the headings,
+;; all other vectors are data for country, region or local authority
+(def covid19-cases-england-combined
+  (csv->clj "data-sets/coronavirus-cases-UK-contry-region-local-authority-gov-uk.csv"))
+
+;; Return just the country data sets
+(def covid19-cases-uk-countries
+  (filter #(some #{"Country"} %)
+          covid19-cases-england-combined))
+
+;; Return region data
+(def covid19-cases-uk-regions
+  (filter #(some #{"Region"} %)
+          covid19-cases-england-combined))
+
+;; Return just the local authority data
+;; remove the country and region data and that should be what is left (including the heading)
+;; (def covid19-cases-uk-local-authorities
+;;   (remove #(some #{"Country" "Region"} %)
+;;           covid19-cases-england-combined))
+
+(def covid19-cases-uk-local-authorities
+  (filter #(some #{"Upper tier local authority"} %)
+          covid19-cases-england-combined))
+
