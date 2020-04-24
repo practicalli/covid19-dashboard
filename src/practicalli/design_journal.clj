@@ -719,3 +719,53 @@ covid-uk-daily-indicators-map
 
 
 
+
+
+;; GEOJSON data sets
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; GeoJSON data not working
+;; (oz/view! {:data {:url    "/public/data/uk-england.geo.json"
+;;                   :format {:type     "json"
+;;                            :property "features"}}
+;;            :mark "geoshape"})
+
+
+;; Dowload from UK office for National Statistics
+
+;; Does not work correctly with Oz
+;; Opens a blue square.
+
+;; Opening in the vega editor https://vega.github.io/editor/#/
+;; Invalid specification {"$schema":"https://vega.github.io/schema/vega-lite/v4.json"}. Make sure the specification includes at least one of the following properties: "mark", "layer", "facet", "hconcat", "vconcat", "concat", or "repeat".
+;; http://geoportal.statistics.gov.uk/datasets/473aefdcee19418da7e5dbfdeacf7b90_3?geometry=-39.745%2C46.015%2C34.874%2C63.432
+;; GeoJSON file
+;; https://opendata.arcgis.com/datasets/473aefdcee19418da7e5dbfdeacf7b90_3.geojson
+
+;; (oz/view! {:data {:url    "/geo-data/NUTS_Level_3_January_2018_Super_Generalised_Clipped_Boundaries_in_the_United_Kingdom.geojson"
+;;                   :format {:type     "json"
+;;                            :property "features"}}
+;;            :mark "geoshape"})
+
+
+
+;; Minimum viable geographic visualization
+;; Googling to find a workable GEO.json file for the UK
+;; https://raw.githubusercontent.com/martinjc/UK-GeoJSON/master/json/administrative/eng/lad.json
+
+;; (def gb-uk-geo-json-map "/public/data/uk-england-lad.geo.json")
+
+;; basic structure with no data applied
+
+(def uk-england-local-authorities
+  {:data {:url    "/geo-data/uk-england-lad.geo.json"
+          :format {:type     "json"
+                   :property "features"}}
+
+   :mark   {:type "geoshape" :stroke "white" :strokeWidth 0.5}
+   :height 1000
+   :width  920})
+
+(oz/view! uk-england-local-authorities)
+
+
