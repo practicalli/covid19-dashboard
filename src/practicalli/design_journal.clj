@@ -1072,3 +1072,59 @@ covid-uk-daily-indicators-map
 ;;               ]
 
 
+
+;; BAD DATA alert
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Oh, I realized that my update function is not getting the real data
+;; If I set the default to a lower random number, all the values are lower
+
+(defn update-cases-data
+  [geo-json-data-set cases-data-set]
+
+  (update
+    geo-json-data-set
+    :features
+    (fn [features]  ;; as we are using update, features represents the whole geo-json data set
+      (mapv
+        (fn [feature]
+          (assoc
+            feature
+            :Cases (get (filter #(= (:LAD13NM (:properties feature))
+                                    (get % "Area name"))
+                                cases-data-set)
+                        "Cumulative lab-confirmed cases" (rand-int 10))
+
+            :Location (:LAD13NM (:properties feature)))
+
+          )
+        features
+        ))))
+
+(def england-lad-geojson-with-cases
+  (update-cases-data england-lad-geojson covid19-cases-uk-englad-lad))
+
+;; Add a tool tip to the view
+
+(oz/view!
+  {:title    {:text "COVID19 cases in England Hospitals"}
+   :height   1000
+   :width    920
+   :data     {:name   "England"
+              :values england-lad-geojson-with-cases
+              :format {:property "features"}},
+   :mark     {:type "geoshape" :stroke "white" :strokeWidth 0.5}
+   :encoding {:color
+              {:field "Cases",
+               :type  "quantitative"
+               :scale {:domain [0 (maximum-cases covid19-cases-uk-englad-lad)]}}
+              :tooltip [{:field "Location" :type "nominal"}
+                        {:field "Cases" :type "quantitative"}]
+              }})
+
+
+;; Looking at the values of the tooltip over individual regions
+;; the values were much higher than the highest value,
+;; so obviously have multiple occurrences of each location
+;; and it seems I am summing daily cumulative totals as cumulative values
+
