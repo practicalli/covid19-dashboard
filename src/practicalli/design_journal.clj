@@ -663,3 +663,17 @@ covid-uk-daily-indicators-map
 (def covid19-cases-uk-combined
   (csv->clj-hash-map "data-sets/coronavirus-cases-UK-contry-region-local-authority-gov-uk.csv"))
 
+
+(defn uk-data-view-hash-map
+  "Specific view of a given data set based on location"
+  [data-set location]
+  (filter #(= location (:Area type  %) data-set)))
+
+(uk-data-view-hash-map covid19-cases-uk-combined "Country")
+
+;; This doesn't work as keywords do not have spaces in them.
+;; Reviewing the semantic-csv library, we can ask it not to convert headings into keywords
+;; using {:keyify false} as the first argument to mapify
+
+
+{"key with space" "value"}
