@@ -769,3 +769,43 @@ covid-uk-daily-indicators-map
 (oz/view! uk-england-local-authorities)
 
 
+;; Transform the GeoJSON data to Clojure
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Read in the json data from the GEOJSON file
+;; The GEOJSON is converted to a CLojure data structure
+
+(def england-lad-geojson
+  (json/read-value
+    (io/resource "public/geo-data/uk-england-lad.geo.json")
+    (json/object-mapper {:decode-key-fn true})))
+
+
+;; data structure of the transformed GeoJSON file
+;; Essentially it is a map with a :featurs key
+;; which is associated the value of a vector of maps
+
+{:features
+ [{:properties {:LAD13CD  "Local Authority Disctrict December 2012 - eg. E060000001"
+                :LAD13NM  "Local Authority District Name - eg. Hartlepool"
+                :LAD13CDO ""}
+   :type       "Feature"
+   :geometry   {:coordinates [[[[0 0] [1 1]]]]}}]}
+
+
+;; We can still use the transformed GEOJSON data,
+;; using a :values key in the :data section
+
+(oz/view!
+  {:title  {:text "COVID19 cases in England Hospitals"}
+   :height 1000
+   :width  920
+   :data   {:name   "England"
+            :values england-lad-geojson
+            :format {:property "features"}},
+   :mark   {:type "geoshape" :stroke "white" :strokeWidth 0.5}})
+
+
+;; For each feature we can add keys that contain values from the Gov.uk data
+
+
