@@ -586,3 +586,23 @@ covid-uk-daily-indicators-map
   (filter #(some #{"Upper tier local authority"} %)
           covid19-cases-england-combined))
 
+
+
+;; A helper function would be useful right now
+
+(defn uk-data-view
+  "Specific view of a given data set based on location"
+  [data-set location]
+  (filter #(some #{location} %) data-set))
+
+
+(def covid19-cases-uk-countries
+  (uk-data-view covid19-cases-england-combined "Country"))
+
+(def covid19-cases-uk-regions
+  (uk-data-view covid19-cases-england-combined "Region"))
+
+(def covid19-cases-uk-local-authorities
+  (uk-data-view covid19-cases-england-combined "Upper tier local authority"))
+
+
