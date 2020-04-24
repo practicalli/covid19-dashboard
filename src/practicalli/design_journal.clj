@@ -472,6 +472,25 @@ covid-uk-daily-indicators
 
 (oz/view! dashboard-headlines-bulma-generators)
 
+
+
+
+
+;; Level not working as shown on the bulma website
+;; (def dashboard-bulma-level
+;;   [:nav {:class "level"}
+;;    [:div {:class "level-item has-text-centered"}
+;;     [:p {:class "heading"} "England"]
+;;     [:p {:class "title has-text-primary is-size-1"} "12,288"]
+;;     [:p {:class "title has-text-primary"} "12,288"]]
+;;    [:div {:class "level-item has-text-centered"}
+;;     [:p {:class "heading"} "England"]
+;;     [:p {:class "title has-text-primary is-size-1"} "12,288"]
+;;     [:p {:class "title has-text-primary"} "12,288"]]]
+;;   )
+
+;; (oz/view! dashboard-bulma-level)
+
 ;; TODO:
 ;; Set own colours
 ;; Add some bootstrap to make the headlines look nicer
