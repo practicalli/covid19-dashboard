@@ -809,3 +809,91 @@ covid-uk-daily-indicators-map
 ;; For each feature we can add keys that contain values from the Gov.uk data
 
 
+
+;; Combine GeoJSON and Gov.uk data
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; So now we just need to merge the GeoJSON data with our country data
+;; and hope everything lines up
+
+;; Map over each feature in the GeoJSON file
+;; associate the keys from the uk data set
+
+;; HINT: Use the cider-inspect tool to navigate the UK data structure
+;; to grab the keys it uses
+
+;; Each property has the following structure
+
+{:properties {:LAD13CD  "Local Authority Disctrict December 2012 - eg. E060000001"
+              :LAD13NM  "Local Authority District Name - eg. Hartlepool"
+              :LAD13CDO ""}
+ :type       "Feature"
+ :geometry   {:coordinates [[[[0 0] [1 1]]]]}
+ :cases      27}
+
+
+
+;; return the local area district name
+(get-in (first (:features england-lad-geojson)) [:properties :LAD13NM])
+
+
+;; UK data set elements
+
+;; "Area name" = "Barking and Dagenham"
+;; "Area code" = "E09000002"
+;; "Area type" = "Upper tier local authority"
+;; "Specimen date" = "2020-04-14"
+;; "Daily lab-confirmed cases" = "4"
+;; "Cumulative lab-confirmed cases" = "347"
+
+
+;; transform the GeoJSON data to include cases information for each feature
+;; - map over each feature in turn
+;; -- associate a :Cases key that has the district name and case total for that district
+(mapv
+  (fn [feature]
+    (assoc
+      feature
+      :Cases (get
+               (get covid19-cases-uk-englad-lad
+                    (get-in feature [:properties :LAD13NM]))
+               "Cumulative lab-confirmed cases")))
+
+  england-lad-geojson)
+
+
+;; If this is done as an update function, then we can update each feature
+;; with the cases data from uk data set.
+
+;; Simply put it will be of the form
+;; (update geojson-data :features update-uk-data)
+
+;; the update-uk-data is a little more complex though :)
+
+(defn update-cases-data
+  [geo-json-data-set cases-data-set]
+
+  (update
+    geo-json-data-set
+    :features
+    (fn [features]  ;; as we are using update, features represents the whole geo-json data set
+      (mapv
+        (fn [feature]
+          (assoc
+            feature
+            :Cases (get (filter #(= (:LAD13NM (:properties feature)) ;; name of the local authority
+                                    (get % "Area name"))
+                                cases-data-set)
+                        "Cumulative lab-confirmed cases" (rand-int 12000)))
+
+          )
+        features
+        ))))
+
+
+(def england-lad-geojson-with-cases
+  (update-cases-data england-lad-geojson covid19-cases-uk-englad-lad))
+
+
+;; now use england-lad-geojson-with-cases as the data for our view.
+
