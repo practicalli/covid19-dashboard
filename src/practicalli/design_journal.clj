@@ -1028,3 +1028,47 @@ covid-uk-daily-indicators-map
 ;; to create a new data set with just the current maximum value
 ;; for each district.
 
+
+;; Using aggregate with Vega-lite
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; First lets see if there is anything that we can adjust in the view
+;; vega-lite has an aggregate
+;; https://vega.github.io/vega-lite/docs/aggregate.html
+;; e.g. "aggregate": "max",
+;; It is assumed that this will sum up all the values for each district
+
+
+(oz/view!
+  {:title    {:text "COVID19 cases in England Hospitals"}
+   :height   1000
+   :width    920
+   :data     {:name   "England"
+              :values england-lad-geojson-with-cases
+              :format {:property "features"}},
+   :mark     {:type "geoshape" :stroke "white" :strokeWidth 0.5}
+   :encoding {:color
+              {:field     "Cases",
+               :aggregate "max",
+               :type      "quantitative"
+               :scale     {:domain [0 (maximum-cases covid19-cases-uk-englad-lad)]}}
+              :tooltip [{:field "Location" :type "nominal"}
+                        {:field "Cases" :type "quantitative"}]
+              }})
+
+
+;; Unfortunately the aggregate option breaks the display of the map
+;; so it seems it does not do what I was hoping for
+
+;; vega-lite has a transform
+
+;; "transform": [
+;;               {
+;;                "aggregate" : [{
+;;                                "op"    : "mean",
+;;                                "field" : "Cases",
+;;                                "as"    : "mean_acc"
+;;                                }],
+;;                }
+;;               ]
+
+
