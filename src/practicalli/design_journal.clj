@@ -970,3 +970,61 @@ covid-uk-daily-indicators-map
 ;; Or perhaps the values for the districts are not being used correctly.
 ;; Having the a scale that is too large can be misleading
 
+
+;; Adding a tool tip to see values of each district
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; To make the tool tip simpler, add the name the district
+;; at the top level of each feature, as was done with cases.
+
+;; Add to the existing update code.
+;; The relevant code was already create for cases
+;; (:LAD13NM (:properties feature))
+
+(defn update-cases-data
+  [geo-json-data-set cases-data-set]
+
+  (update
+    geo-json-data-set
+    :features
+    (fn [features]  ;; as we are using update, features represents the whole geo-json data set
+      (mapv
+        (fn [feature]
+          (assoc
+            feature
+            :Cases (get (filter #(= (:LAD13NM (:properties feature))
+                                    (get % "Area name"))
+                                cases-data-set)
+                        "Daily lab-confirmed cases" (rand-int 12000))
+
+            :Location (:LAD13NM (:properties feature))))
+
+        features
+        ))))
+
+(def england-lad-geojson-with-cases
+  (update-cases-data england-lad-geojson covid19-cases-uk-englad-lad))
+
+;; Add a tool tip to the view using :Location data
+
+(oz/view!
+  {:title    {:text "COVID19 cases in England Hospitals"}
+   :height   1000
+   :width    920
+   :data     {:name   "England"
+              :values england-lad-geojson-with-cases
+              :format {:property "features"}},
+   :mark     {:type "geoshape" :stroke "white" :strokeWidth 0.5}
+   :encoding {:color
+              {:field "Cases",
+               :type  "quantitative"
+               :scale {:domain [0  40000 #_(maximum-cases covid19-cases-uk-englad-lad)]}}
+              :tooltip [{:field "Location" :type "nominal"}
+                        {:field "Cases" :type "quantitative"}]
+              }})
+
+
+;; To resolve this issue, a reducing function could be used
+;; to create a new data set with just the current maximum value
+;; for each district.
+
