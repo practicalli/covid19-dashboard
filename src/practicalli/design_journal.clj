@@ -1188,3 +1188,28 @@ covid-uk-daily-indicators-map
 
 ;; (val covid19-cases-uk-englad-lad )
 
+
+;; Oz view with combined GeoJSON and Gov.uk data
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; (oz/view!
+;;   {:title    {:text "COVID19 cases in England Hospitals"}
+;;    :height   1000
+;;    :width    920
+;;    :data     {:name   "England"
+;;               :values england-lad-geojson-with-cases
+;;               :format {:property "features"}},
+;;    :mark     {:type "geoshape" :stroke "white" :strokeWidth 0.5}
+;;    :encoding {:color {:field "Cases-per-100k",
+;;                       :type  "quantitative"
+;;                       :scale {:domain [0 120000
+;;                                        ;; Calculate the max value from the :cases keyword in the data set
+;;                                        #_(apply max (map :cases-per-100k (vals deutschland/bundeslaender-data)))]}}
+
+;;               ;; is the bundesland added to the geo-json data because its otherwise burried in the properties data?
+;;               :tooltip [{:field "Bundesland" :type "nominal"}
+;;                         {:field "Cases" :type "quantitative"}]}
+;;    :selection {:highlight {:on "mouseover" :type "single"}}}
+;;   )
+
+
