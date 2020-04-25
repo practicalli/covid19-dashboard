@@ -5,7 +5,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (ns practicalli.vega-lite-components
-  (:require [practicalli.data-mock :as data-mock]))
+  (:require [practicalli.data-mock :as data-mock]
+            [practicalli.data-gov-uk :as data-gov-uk]))
 
 
 
