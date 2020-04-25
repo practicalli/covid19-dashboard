@@ -1287,3 +1287,104 @@ covid-uk-daily-indicators-map
 
 (uk-data-view covid19-cases-uk-englad-lad "Hartlepool")
 
+
+
+;; Go right back to the starting data
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Its actually easier to go back to the starting data and add some filters there
+
+
+(defn csv->clj-hash-map
+  "Convert CSV file to sequence of hash maps.
+  Each hash-map uses the heading text as a key
+  for each element in the row of data.
+
+  Return: a sequence of hash-maps"
+  [data-source]
+  (->> data-source
+       io/resource
+       slurp
+       csv/read-csv
+       semantic-csv/mappify))
+
+(def covid19-cases-uk-combined
+  (csv->clj-hash-map "data-sets/coronavirus-cases-UK-contry-region-local-authority-gov-uk.csv"))
+
+
+(def covid19-cases-uk-local-authorities-hartlepool
+  (filter #(some #{"Hartlepool"} %)
+          covid19-cases-england-combined))
+
+
+;; 0. "Hartlepool"
+;; 1. "E06000001"
+;; 2. "Upper tier local authority"
+;; 3. "2020-04-14"
+;; 4. "0"
+;; 5. "75"
+
+;; We could just get the map with the latest date
+;; Dates are strings, so a simple comparison seems fine
+;; no need to convert them into date objects
+
+(= "2020-04-14" "2020-04-14")
+;; => true
+
+(= "2020-04-14" "2020-04-13")
+;; => false
+
+
+;; We can either get the latest date or the maximum cummulative total
+;; using the latest date requires a lot less code than comparing each
+;; cumulative total from every occurrence of every district
+
+
+(def covid19-cases-uk-local-authorities-latest
+  (filter #(some #{"2020-04-14"} %)
+          covid19-cases-england-combined))
+
+
+
+
+(defn extract-data-from-csv
+  "Convert CSV file to sequence of vectors
+  Each hash-map uses the heading text as a key
+  for each element in the row of data.
+
+  Return: a sequence of vectors"
+  [data-source]
+  (->> data-source
+       io/resource
+       slurp
+       csv/read-csv))
+
+(def extracted-data-gov-uk
+  (extract-data-from-csv "data-sets/coronavirus-cases-UK-contry-region-local-authority-gov-uk.csv"))
+
+
+(defn data-set-specific-date
+  "Transform to map for visualization,
+  including only the specific date.
+
+  Use csv headings as keys in each map.
+
+  Return: a sequence of maps"
+  [extracted-data-set date]
+
+  (let [heading (first extracted-data-set)]
+
+    (conj
+      (filter #(some #{date} %) extracted-data-set)
+      heading)))
+
+
+;; conj will join the headings which is a vector
+;; to the specific days occurrences which is a sequence of vectors
+(conj '([1 2 3] [4 5 6]) ["a" "b" "c"] )
+
+
+;; Test the combination works
+;; (data-set-specific-date extracted-data-gov-uk "2020-04-14")
+
+
