@@ -1491,3 +1491,28 @@ covid-uk-daily-indicators-map
               }})
 
 
+
+;; TODO: filter out non district settings to make maximum-cases work correctly.
+;; Its currently including data from England
+
+(def covid19-cases-uk-local-authorities
+  (filter #(some #{"Upper tier local authority"} %)
+          extracted-data-gov-uk))
+
+;;  This removes the heading though, which is still needed to convert
+;; the data set into a map for Oz.
+
+(def covid19-cases-uk-local-authorities
+  (remove #(some #{"Country" "Region"} %)
+          extracted-data-gov-uk))
+
+
+(def gov-uk-date-specific-lad
+  (data-set-specific-date covid19-cases-uk-local-authorities "2020-04-14"))
+
+(def england-lad-geojson-with-cases-date-specific-lad
+  (update-cases-data-simplified england-lad-geojson gov-uk-date-specific-lad))
+
+
+;; TODO: Create a single def with references to all the data transformations
+;; - Put this in its own namespace ??
