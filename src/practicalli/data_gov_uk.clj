@@ -51,6 +51,11 @@
 
         features))))
 
+
+;; Extract data from CVS files
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Original individual data sets
+
 (defn covid19-uk-data
   [data-file]
   (let [data-extract
