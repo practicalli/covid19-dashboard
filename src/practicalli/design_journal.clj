@@ -750,6 +750,37 @@ covid-uk-daily-indicators-map
 ;;            :mark "geoshape"})
 
 
+;; Minimum viable geographic visualization
+;; Googling to find a workable GEO.json file for the UK
+;; https://raw.githubusercontent.com/martinjc/UK-GeoJSON/master/json/administrative/eng/lad.json
+
+;; Gov.uk - https://data.gov.uk/
+;; http://geoportal1-ons.opendata.arcgis.com/datasets/8d3a9e6e7bd445e2bdcc26cdf007eac7_2.geojson
+
+;; Regions (December 2015) Full Clipped Boundaries in England
+;; http://geoportal1-ons.opendata.arcgis.com/datasets/8d3a9e6e7bd445e2bdcc26cdf007eac7_0.geojson
+
+;; (def gb-uk-geo-json-map "/public/data/uk-england-lad.geo.json")
+
+(def geo-map-great-britain
+  {:height 400
+   :width  360
+   :data   {:url "http://geoportal1-ons.opendata.arcgis.com/datasets/8d3a9e6e7bd445e2bdcc26cdf007eac7_2.geojson"
+
+            :format {:type     "json"
+                     :property "features"}}
+   :mark "geoshape"})
+
+(def geo-map-england-full-clipped-boundaries
+  {:height 400
+   :width  360
+   :data   {:url "http://geoportal1-ons.opendata.arcgis.com/datasets/8d3a9e6e7bd445e2bdcc26cdf007eac7_0.geojson"
+
+            :format {:type     "json"
+                     :property "features"}}
+   :mark "geoshape"})
+
+
 
 ;; Minimum viable geographic visualization
 ;; Googling to find a workable GEO.json file for the UK
