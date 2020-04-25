@@ -1,3 +1,11 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; practicalli.covid19-dashboard
+;;
+;; Displays a dashboard of Covid19 data
+;; for the United Kingdom
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (ns practicalli.covid19-dashboard
   (:gen-class)
   (:require [oz.core :as oz]
