@@ -72,3 +72,23 @@
   (oz/view! view))
 
 (-main dashboard-corvid19-uk)
+
+
+;; View Vega-lite components
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(comment
+
+  ;; Working, Gov.uk data
+  (oz/view! views/line-plot-uk-countries-cumulative-cases)
+
+  ;; Working, using mock data
+  (oz/view! views/line-plot)
+  (oz/view! views/stacked-bar)
+
+  ;; Under development
+  (oz/view! views/geo-map-great-britain)
+
+  (oz/view! views/geo-map-england-full-clipped-boundaries)
+
+  (oz/view! views/geo-map-uk-england-local-area-districts-date-specific)
+  )
