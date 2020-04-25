@@ -596,6 +596,8 @@ covid-uk-daily-indicators-map
   (filter #(some #{"Upper tier local authority"} %)
           covid19-cases-england-combined))
 
+(def gov-uk-data-headings
+  (first covid19-cases-england-combined))
 
 
 ;; A helper function would be useful right now
