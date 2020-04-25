@@ -59,10 +59,25 @@
               :color {:field "location"
                       :type  "nominal"}}})
 
+
+;; GeoJSON view
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(comment
 
-  (oz/view! line-plot)
-  (oz/view! stacked-bar)
 
-)
+(def geo-map-uk-england-local-area-districts-date-specific
+  {:title    {:text "COVID19 cases in England Hospitals"}
+   :height   1000
+   :width    920
+   :data     {:name   "England"
+              :values data-gov-uk/england-lad-geojson-with-cases-date-specific-lad
+              :format {:property "features"}},
+   :mark     {:type "geoshape" :stroke "white" :strokeWidth 0.5}
+   :encoding {:color
+              {:field "Cases",
+               :type  "quantitative"
+               :scale {:domain [0 (data-gov-uk/maximum-cases
+                                    data-gov-uk/covid19-cases-uk-local-authority-district-date-specific)
+                                #_(data-gov-uk/maximum-cases data-gov-uk/gov-uk-date-specific-lad)]}}
+              :tooltip [{:field "Location" :type "nominal"}
+                        {:field "Cases" :type "quantitative"}]
+              }})
