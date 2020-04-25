@@ -1388,3 +1388,31 @@ covid-uk-daily-indicators-map
 ;; (data-set-specific-date extracted-data-gov-uk "2020-04-14")
 
 
+
+
+;; Now turn it into a map
+
+(defn data-set-specific-date
+  "Transform to map for visualization,
+  including only the specific date.
+
+  Use csv headings as keys in each map.
+
+  Return: a sequence of maps"
+  [extracted-data-set date]
+
+  (let [heading (first extracted-data-set)]
+
+    (semantic-csv/mappify
+      {:keyify false}
+      (conj
+        (filter #(some #{date} %) extracted-data-set)
+        heading))))
+
+
+(def gov-uk-date-specific
+  (data-set-specific-date extracted-data-gov-uk "2020-04-14"))
+
+
+;; TODO: extract the local area district occurrences before turning into a map.
+
