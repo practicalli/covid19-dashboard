@@ -25,3 +25,7 @@
 (comment
   (covid19-data-set "England" "Scotland" "Wales" "Northern Ireland")
   )
+
+(first (covid19-data-set "England" "Scotland" "Wales" "Northern Ireland"))
+
+;; => {:day 0, :location "England", :cases 6.0}
