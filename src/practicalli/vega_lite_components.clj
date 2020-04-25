@@ -48,7 +48,17 @@
                       :type  "nominal"}}})
 
 
-;; View Vega-lite components
+(def stacked-bar-uk-countries-cumulative-cases
+  {:mark     "bar"
+   :data     {:values data-gov-uk/covid19-uk-countries-all-cumulative-cases}
+   :encoding {:x     {:field "day"
+                      :type  "ordinal"}
+              :y     {:aggregate "location"
+                      :field     "cases"
+                      :type      "quantitative"}
+              :color {:field "location"
+                      :type  "nominal"}}})
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (comment
 
