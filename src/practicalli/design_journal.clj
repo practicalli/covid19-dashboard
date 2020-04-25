@@ -1465,3 +1465,29 @@ covid-uk-daily-indicators-map
   "Cumulative lab-confirmed cases" -1)
 
 
+
+
+
+;; Oz view with combined GeoJSON and Gov.uk data latest
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+(oz/view!
+  {:title    {:text "COVID19 cases in England Hospitals"}
+   :height   1000
+   :width    920
+   :data     {:name   "England"
+              :values england-lad-geojson-with-cases-date-specific
+              :format {:property "features"}},
+   :mark     {:type "geoshape" :stroke "white" :strokeWidth 0.5}
+   :encoding {:color
+              {:field "Cases",
+               :type  "quantitative"
+               :scale {:domain [0 2000
+                                #_(maximum-cases gov-uk-date-specific)]}}
+              :tooltip [{:field "Location" :type "nominal"}
+                        {:field "Cases" :type "quantitative"}]
+              }})
+
+
