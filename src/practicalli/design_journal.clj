@@ -1416,3 +1416,52 @@ covid-uk-daily-indicators-map
 
 ;; TODO: extract the local area district occurrences before turning into a map.
 
+
+(defn update-cases-data-simplified
+  [geo-json-data-set cases-data-set]
+
+  (update
+    geo-json-data-set
+    :features
+    (fn [features]  ;; as we are using update, features represents the whole geo-json data set
+      (mapv
+        (fn [feature]
+          (assoc
+            feature
+            :Cases
+            (get
+              (first
+                (filter
+                  #(some #{(:LAD13NM (:properties feature))} (vals %))
+                  cases-data-set))
+              "Cumulative lab-confirmed cases" -1)
+
+            :Location (:LAD13NM (:properties feature))))
+
+        features
+        ))))
+
+(def england-lad-geojson-with-cases-date-specific
+  (update-cases-data-simplified england-lad-geojson gov-uk-date-specific))
+
+
+(filter
+  #(some #{"England"} (vals %))
+  (take 5 gov-uk-date-specific))
+;; => ({"Area name" "England", "Area code" "E92000001", "Area type" "Country", "Specimen date" "2020-04-14", "Daily lab-confirmed cases" "134", "Cumulative lab-confirmed cases" "76371"})
+
+
+(first
+  (filter
+    #(some #{"England"} (vals %))
+    (take 5 gov-uk-date-specific)))
+;; => {"Area name" "England", "Area code" "E92000001", "Area type" "Country", "Specimen date" "2020-04-14", "Daily lab-confirmed cases" "134", "Cumulative lab-confirmed cases" "76371"}
+
+(get
+  (first
+    (filter
+      #(some #{"England"} (vals %))
+      (take 5 gov-uk-date-specific)))
+  "Cumulative lab-confirmed cases" -1)
+
+
