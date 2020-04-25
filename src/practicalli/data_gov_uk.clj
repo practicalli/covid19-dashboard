@@ -73,3 +73,28 @@
   A simple fix by copying data to the old key."
   (let [daily-uk-cases (get covid19-uk-data-latest "NewUKCases")]
     (assoc covid19-uk-data-latest "DailyUKCases" daily-uk-cases)))
+
+
+
+;; Extract data from CVS files
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; New combined data from Gov.uk
+;; April 14th 2020 onwards
+
+
+(defn extract-data-from-csv
+  "Convert CSV file to sequence of vectors
+  Each hash-map uses the heading text as a key
+  for each element in the row of data.
+
+  Return: a sequence of vectors"
+  [data-source]
+  (->> data-source
+       io/resource
+       slurp
+       csv/read-csv))
+
+(def covid19-uk-england-combined-data
+  (extract-data-from-csv "data-sets/coronavirus-cases-UK-contry-region-local-authority-gov-uk.csv"))
+
+
