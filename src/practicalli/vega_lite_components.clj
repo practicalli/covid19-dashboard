@@ -38,7 +38,7 @@
 
 (def stacked-bar
   {:mark     "bar"
-   :data     {:values (data-mock/covid19-data-setk"England" "Scotland" "Wales" "Norther Ireland")}
+   :data     {:values (data-mock/covid19-data-set "England" "Scotland" "Wales" "Norther Ireland")}
    :encoding {:x     {:field "day"
                       :type  "ordinal"}
               :y     {:aggregate "location"
