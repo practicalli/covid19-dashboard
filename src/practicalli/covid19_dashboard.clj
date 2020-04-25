@@ -58,8 +58,11 @@
 
    ;; Oz visualization
    [:section {:class "section"}
-    [:vega-lite views/line-plot]
-    [:vega-lite views/stacked-bar]]])
+    [:vega-lite views/line-plot-uk-countries-cumulative-cases]
+    [:vega-lite views/stacked-bar-uk-countries-cumulative-cases]
+    [:vega-lite views/geo-map-uk-england-local-area-districts-date-specific]
+    ]])
+
 
 
 
