@@ -110,3 +110,40 @@
     (io/resource "public/geo-data/uk-england-lad.geo.json")
     (json/object-mapper {:decode-key-fn true})))
 
+
+
+;; Transform Gov.uk data
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Filter non district settings to make maximum-cases work correctly.
+(def covid19-cases-uk-local-authority-district
+  (remove #(some #{"Country" "Region"} %)
+          covid19-uk-england-combined-data))
+
+(defn data-set-specific-date
+  "Transform to map for visualization,
+  including only the specific date.
+
+  Use csv headings as keys in each map.
+
+  Return: a sequence of maps"
+  [extracted-data-set date]
+
+  (let [heading (first extracted-data-set)]
+
+    (semantic-csv/mappify
+      {:keyify false}
+      (conj
+        (filter #(some #{date} %) extracted-data-set)
+        heading))))
+
+
+(def covid19-cases-uk-local-authority-district-date-specific
+  (data-set-specific-date covid19-cases-uk-local-authority-district "2020-04-14"))
+
+
+(def england-lad-geojson-with-cases-date-specific-lad
+  (combine-data-sets geojson-england-local-area-district
+                     covid19-cases-uk-local-authority-district-date-specific))
+
+
