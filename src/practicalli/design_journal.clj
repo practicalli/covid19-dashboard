@@ -1130,3 +1130,61 @@ covid-uk-daily-indicators-map
 ;; so obviously have multiple occurrences of each location
 ;; and it seems I am summing daily cumulative totals as cumulative values
 
+
+;; Fixing the update function
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; returns a collection of daily recordings
+(filter (fn [district]
+          (= (get district "Area name") "Hartlepool") ) covid19-cases-uk-englad-lad)
+
+;; really we just want the largest total value
+;; look at the keys to see what is needed
+(keys (first (filter (fn [district]
+                       (= (get district "Area name") "Hartlepool") ) covid19-cases-uk-englad-lad)))
+;; => ("Area name" "Area code" "Area type" "Specimen date" "Daily lab-confirmed cases" "Cumulative lab-confirmed cases")
+
+(map #(get % "Cumulative lab-confirmed cases")
+     (filter (fn [district]
+               (= (get district "Area name") "Hartlepool") ) covid19-cases-uk-englad-lad))
+
+;; then just get the maximum value
+(apply max
+       (map #(Integer/parseInt
+               (get % "Cumulative lab-confirmed cases"))
+            (filter (fn [district]
+                      (= (get district "Area name") "Hartlepool") ) covid19-cases-uk-englad-lad)))
+
+
+(defn update-cases-data
+  [geo-json-data-set cases-data-set]
+
+  (update
+    geo-json-data-set
+    :features
+    (fn [features]  ;; as we are using update, features represents the whole geo-json data set
+      (mapv
+        (fn [feature]
+          (assoc
+            feature
+            :Cases
+            (apply max
+                   (mapv #(Integer/parseInt
+                            (get % "Cumulative lab-confirmed cases"))
+                         (filter (fn [district]
+                                   (= (get district "Area name")
+                                      (:LAD13NM (:properties feature))))
+                                 cases-data-set)))
+
+            :Location (:LAD13NM (:properties feature)))
+
+          )
+        features
+        ))))
+
+(def england-lad-geojson-with-cases
+  (update-cases-data england-lad-geojson covid19-cases-uk-englad-lad))
+
+
+;; (val covid19-cases-uk-englad-lad )
+
