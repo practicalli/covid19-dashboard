@@ -1516,3 +1516,21 @@ covid-uk-daily-indicators-map
 
 ;; TODO: Create a single def with references to all the data transformations
 ;; - Put this in its own namespace ??
+
+(oz/view!
+  {:title    {:text "COVID19 cases in England Hospitals"}
+   :height   1000
+   :width    920
+   :data     {:name   "England"
+              :values england-lad-geojson-with-cases-date-specific-lad
+              :format {:property "features"}},
+   :mark     {:type "geoshape" :stroke "white" :strokeWidth 0.5}
+   :encoding {:color
+              {:field "Cases",
+               :type  "quantitative"
+               :scale {:domain [0 (maximum-cases gov-uk-date-specific-lad)]}}
+              :tooltip [{:field "Location" :type "nominal"}
+                        {:field "Cases" :type "quantitative"}]
+              }})
+
+
