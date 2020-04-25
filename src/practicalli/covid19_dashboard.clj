@@ -92,3 +92,11 @@
 
   (oz/view! views/geo-map-uk-england-local-area-districts-date-specific)
   )
+
+
+;; TODO for project
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; TODO: refactor -main to take a date, which will then
+;; show headline figures from that day.
+;; TODO: create a clojureScript app that allows specific dates to be displayed, updating headline figures
+;; TODO: use cumulative cases data set, rather than daily indicators file, reducing the number of documents required for data extraction.
