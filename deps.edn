@@ -6,8 +6,12 @@
 
   metasoarous/oz {:mvn/version "1.6.0-alpha6"}
 
+  ;; Data extraction
   org.clojure/data.csv {:mvn/version "1.0.0"}
-  semantic-csv         {:mvn/version "0.2.1-alpha1"}}
+  semantic-csv         {:mvn/version "0.2.1-alpha1"}
+  dk.ative/docjure     {:mvn/version "1.13.0"}
+  metosin/jsonista     {:mvn/version "0.2.5"}
+
 
  :aliases
  {:test
