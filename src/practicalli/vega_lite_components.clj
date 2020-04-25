@@ -22,6 +22,16 @@
               :color {:field "location" :type "nominal"}}})
 
 
+(def line-plot-uk-countries-cumulative-cases
+  "Transform data for visualization"
+  {:height   400
+   :width    400
+   :mark     "line"
+   :data     {:values data-gov-uk/covid19-uk-countries-all-cumulative-cases}
+   :encoding {:x     {:field "day" :type "quantitative"}
+              :y     {:field "cases" :type "quantitative"}
+              :color {:field "location" :type "nominal"}}})
+
 
 ;; Stacked bar
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
