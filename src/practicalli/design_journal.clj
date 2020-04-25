@@ -1213,3 +1213,77 @@ covid-uk-daily-indicators-map
 ;;   )
 
 
+
+
+;; Transform Cases data first
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;; Get the maximum value for each local area district
+
+
+;; (group-by "Area name"  covid19-cases-uk-englad-lad)
+
+(defn uk-data-view
+  "Specific view of a given data set based on location"
+  [data-set location]
+  (filter #(some #{location} %) data-set))
+
+
+;; data structure
+;; "Area name" = "Barking and Dagenham"
+;; "Area code" = "E09000002"
+;; "Area type" = "Upper tier local authority"
+;; "Specimen date" = "2020-04-14"
+;; "Daily lab-confirmed cases" = "4"
+;; "Cumulative lab-confirmed cases" = "347"
+
+(def test-data
+  [{"Area name" "Hartlepool" "Cumulative lab-confirmed cases" "347"}
+   {"Area name" "Bromley" "Cumulative lab-confirmed cases" "47"}
+   {"Area name" "Hartlepool" "Cumulative lab-confirmed cases" "7"}
+   {"Area name" "Hartlepool" "Cumulative lab-confirmed cases" "17"}])
+
+(map (fn [occurance]
+       (filter #(some #{"Hartlepool"} %)) occurance)
+     test-data)
+
+(filter (fn [[_ v]]
+          (= "Hartlepool" v))
+        test-data)
+
+(map #(filter (fn [[k v]]
+                (= "Hartlepool" v)) %)
+     test-data)
+;; => ((["Area name" "Hartlepool"]) () (["Area name" "Hartlepool"]) (["Area name" "Hartlepool"]))
+
+
+#_(filter #(some #{"Country"} %)
+          covid19-cases-england-combined)
+
+
+(mapv #(vals %) test-data)
+;; => [("Hartlepool" "347") ("Bromley" "47") ("Hartlepool" "7") ("Hartlepool" "17")]
+
+
+(mapv (fn [occurance]
+        #(some #{"Hartlepool"} %) (vals occurance))
+      test-data)
+;; => [("Hartlepool" "347") ("Bromley" "47") ("Hartlepool" "7") ("Hartlepool" "17")]
+
+
+
+#_(comp #(= "Hartlepool" %) val)
+
+(fn [occurance]
+  (filter (comp #(= "Hartlepool" %) val) occurance))
+
+
+(into {}
+      (map (fn [occurance]
+             (filter (comp #(= "Hartlepool" %) val) occurance))
+           test-data))
+
+
+(uk-data-view covid19-cases-uk-englad-lad "Hartlepool")
+
