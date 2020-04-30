@@ -8,6 +8,14 @@
 
 
 (defn combine-data-sets
+  "Combine data sets by adding top level keys
+  to each location (feature) in the GeoJSON file
+
+  Attributes:
+  - GeoJSON file converted into a Clojure sequence
+  - A sequence of hash-map values for each location
+  Returns: GeoJSON in Clojure with additional top level keys"
+
   [geo-json-data-set cases-data-set]
 
   (update
