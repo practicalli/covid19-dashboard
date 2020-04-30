@@ -37,13 +37,27 @@
 
 
 
-;; Transform Gov.uk data
+;; Sub-sets of Gov.uk data
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Location specific data
 
-;; Filter non district settings to make maximum-cases work correctly.
+(defn data-set-filter-locations
+  [data-set location-set]
+  (filter #(some location-set %)
+          data-set))
+
+(defn data-set-remove-locations
+  [data-set location-set]
+  (remove #(some location-set %)
+          data-set))
+
+
+;; Heading and local area district data
+;; - passed to maximum-cases for sizing the scale of data
 (def covid19-cases-uk-local-authority-district
-  (remove #(some #{"Country" "Region"} %)
-          covid19-uk-england-combined-data))
+  (data-set-remove-locations covid19-uk-england-combined-data
+                             #{"Country" "Region"}))
+
 
 (defn data-set-specific-date
   "Transform to map for visualization,
