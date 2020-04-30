@@ -52,29 +52,6 @@
         features))))
 
 
-;; Extract data from CVS files
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Original individual data sets
-
-(defn covid19-uk-data
-  [data-file]
-  (let [data-extract
-        (csv/read-csv
-          (slurp
-            (io/resource data-file)))]
-    (zipmap (first data-extract) (second data-extract)) )
-  )
-
-(def covid19-uk-data-latest
-  (covid19-uk-data "data/daily-indicators-2020-04-10.csv") )
-
-(def covid19-uk-data-latest-fixed
-  "Name of DailyUKCases has been changed to NewUKCases.
-  A simple fix by copying data to the old key."
-  (let [daily-uk-cases (get covid19-uk-data-latest "NewUKCases")]
-    (assoc covid19-uk-data-latest "DailyUKCases" daily-uk-cases)))
-
-
 
 ;; Extract data from CVS files
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
