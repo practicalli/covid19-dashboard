@@ -11,16 +11,6 @@
             [clojure.data.csv  :as csv]
             [semantic-csv.core :as semantic-csv]))
 
-(defn maximum-cases
-  "Calculates the maximum value of cases.
-  Used to calculate top end of scale in GeoJSON view"
-  [data-set]
-  (apply max
-         (map
-           #(Integer/parseInt
-              (get % "Cumulative lab-confirmed cases"))
-           data-set)))
-
 
 
 ;; Extract data from CVS files

@@ -42,3 +42,17 @@
       [:h2 {:style {:color "hsl(300, 100%, 25%)"}}
        (str (get data-set (str (:alias country) "Deaths")))]]]]]
   )
+
+
+;; Oz View helpers
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn maximum-cases
+  "Calculates the maximum value of cases.
+  Used to calculate top end of scale in GeoJSON view"
+  [data-set]
+  (apply max
+         (map
+           #(Integer/parseInt
+              (get % "Cumulative lab-confirmed cases"))
+           data-set)))
