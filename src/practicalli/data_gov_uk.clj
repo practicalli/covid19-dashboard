@@ -9,8 +9,7 @@
 (ns practicalli.data-gov-uk
   (:require [clojure.java.io   :as io]
             [clojure.data.csv  :as csv]
-            [semantic-csv.core :as semantic-csv]
-            [jsonista.core     :as json]
+            [semantic-csv.core :as semantic-csv]))
 
 
 ;; Data Transformation helpers
@@ -73,18 +72,6 @@
 (def covid19-uk-england-combined-data
   (extract-data-from-csv "data-sets/coronavirus-cases-UK-contry-region-local-authority-gov-uk.csv"))
 
-
-
-;; Extract data from GeoJSON
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; GeoJSON of England Local Area Districts source:
-;; https://raw.githubusercontent.com/martinjc/UK-GeoJSON/master/json/administrative/eng/lad.json
-
-(def geojson-england-local-area-district
-  (json/read-value
-    (io/resource "public/geo-data/uk-england-lad.geo.json")
-    (json/object-mapper {:decode-key-fn true})))
 
 
 
