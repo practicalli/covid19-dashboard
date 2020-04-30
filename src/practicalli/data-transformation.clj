@@ -1,11 +1,12 @@
-(ns practicalli.data-transformation)
+(ns practicalli.data-transformation
+  (:require [practicalli.data-gov-uk :as data-gov-uk]
+            [practicalli.data-geo-json :as data-geo-json]))
 
 
 ;; Data Transformation helpers
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-;; TODO move to view helper as its specific to creating data for a view
 (defn combine-data-sets
   [geo-json-data-set cases-data-set]
 
@@ -28,3 +29,11 @@
             :Location (:LAD13NM (:properties feature))))
 
         features))))
+
+
+;; Transformed data sets
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(def england-lad-geojson-with-cases-date-specific-lad
+  (combine-data-sets data-geo-json/geojson-england-local-area-district
+                     data-gov-uk/covid19-cases-uk-local-authority-district-date-specific))
