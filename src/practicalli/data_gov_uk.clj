@@ -12,7 +12,6 @@
             [semantic-csv.core :as semantic-csv]))
 
 
-
 ;; Extract data from CVS files
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; New combined data from Gov.uk
@@ -30,6 +29,7 @@
        io/resource
        slurp
        csv/read-csv))
+
 
 (def covid19-uk-england-combined-data
   (extract-data-from-csv "data-sets/coronavirus-cases-UK-contry-region-local-authority-gov-uk.csv"))
@@ -59,6 +59,12 @@
                              #{"Country" "Region"}))
 
 
+
+;; Date specific sub-set of data
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; data sets as sequence of hash-maps
+
+
 (defn data-set-specific-date
   "Transform to map for visualization,
   including only the specific date.
@@ -77,10 +83,8 @@
         heading))))
 
 
+;; Transformed Gov.uk data sets
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (def covid19-cases-uk-local-authority-district-date-specific
   (data-set-specific-date covid19-cases-uk-local-authority-district "2020-04-14"))
-
-
-(def england-lad-geojson-with-cases-date-specific-lad
-  (combine-data-sets geojson-england-local-area-district
-                     covid19-cases-uk-local-authority-district-date-specific))
