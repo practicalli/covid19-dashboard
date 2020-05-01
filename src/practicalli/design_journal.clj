@@ -1598,3 +1598,94 @@ covid-uk-daily-indicators-map
 ;; update clojure-hash-map :feature new-data
 
 
+
+
+;; Comparing GeoJSON features and Gov.uk districts
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Create a set of the features from the GeoJSON containing
+;; :LAD13NM - name of the district
+
+(require 'practicalli.data-transformation)
+
+;; Get the district names from the GeoJSON file
+(map #(get-in % [:properties :LAD13NM] )
+     (:features practicalli.data-transformation/england-lad-geojson-with-cases-date-specific-lad))
+
+;; Total number of districts
+(count
+  (map #(get-in % [:properties :LAD13NM] )
+       (:features practicalli.data-transformation/england-lad-geojson-with-cases-date-specific-lad)))
+;; => 326
+
+;; Are they all unique?
+(into #{}
+      (map #(get-in % [:properties :LAD13NM] )
+           (:features practicalli.data-transformation/england-lad-geojson-with-cases-date-specific-lad)))
+
+;; Yes, all unique
+(count
+  (into #{}
+        (map #(get-in % [:properties :LAD13NM] )
+             (:features practicalli.data-transformation/england-lad-geojson-with-cases-date-specific-lad))))
+;; => 326
+
+(def geojson-data-names
+  (into #{}
+        (map #(get-in % [:properties :LAD13NM] )
+             (:features practicalli.data-geo-json/england-lad-geojson-with-cases-date-specific-lad))))
+
+
+;; Get district names for the latest day of the cases data
+(require 'practicalli.data-gov-uk)
+
+(map
+  #(get % "Area name")
+  practicalli.data-gov-uk/covid19-cases-uk-local-authority-district-date-specific)
+
+(count
+  (map
+    #(get % "Area name")
+    practicalli.data-gov-uk/covid19-cases-uk-local-authority-district-date-specific))
+;; => 150
+
+(def data-gov-uk-england-names
+  (into #{}
+        (map
+          #(get % "Area name")
+          practicalli.data-gov-uk/covid19-cases-uk-local-authority-district-date-specific)))
+
+
+
+;; Compare the names in the two data sets
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Find the names that appear in both data sets
+
+;; clojure.set contains functions for working with Clojure set data types
+(require 'clojure.set)
+
+
+;; Take the intersection of both data sets (names in both sets)
+;; and count the total
+(count
+  (clojure.set/intersection
+    data-gov-uk-england-names
+    geojson-data-names))
+;; => 121
+
+;; 29 cases not found in the GeoJSON
+(count
+  (clojure.set/difference
+    data-gov-uk-england-names
+    geojson-data-names))
+;; => 29
+
+
+;; 205 GeoJSON districts without cases data
+(count
+  (clojure.set/difference
+    geojson-data-names
+    data-gov-uk-england-names))
+;; => 205
+
+
