@@ -167,6 +167,15 @@
 
 (oz/view! dashboard)
 
+
+;; * :bar - Histogram
+;; * Multi-series Line Chart
+;; * Stripplot
+;; * Slope Graph
+;; * Binned Scatterplot
+;; * Area Chart
+
+
 ;; Reading in CSV data
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -502,9 +511,15 @@ covid-uk-daily-indicators
 ;; (oz/view! dashboard-bulma-level)
 
 ;; TODO:
-;; Set own colours
-;; Add some bootstrap to make the headlines look nicer
+;; Set own colors
+;; Add Geographic map with data regions
 ;; Investigate other graphs
+
+
+
+
+
+
 
 
 ;; Alternative: semantic-csv
@@ -1413,6 +1428,7 @@ covid-uk-daily-indicators-map
 ;; conj will join the headings which is a vector
 ;; to the specific days occurrences which is a sequence of vectors
 (conj '([1 2 3] [4 5 6]) ["a" "b" "c"] )
+;; => (["a" "b" "c"] [1 2 3] [4 5 6])
 
 
 ;; Test the combination works
@@ -1494,6 +1510,7 @@ covid-uk-daily-indicators-map
       #(some #{"England"} (vals %))
       (take 5 gov-uk-date-specific)))
   "Cumulative lab-confirmed cases" -1)
+;; => "76371"
 
 
 
@@ -1563,5 +1580,21 @@ covid-uk-daily-indicators-map
               :tooltip [{:field "Location" :type "nominal"}
                         {:field "Cases" :type "quantitative"}]
               }})
+
+
+
+
+
+
+
+;; References
+;; Local Authority District (December 2013) http://hub.arcgis.com/datasets/d266cbe2179a4766b4de7c6e73b4a285_0/data
+
+
+;; The clojure data structure is the map argument to the update function
+;; :features is the key to be updated in the clojure hash-map
+;; the update is managed with an anonymous function that takes the original features data structure
+;; and changes the values of specific keys using an assoc function
+;; update clojure-hash-map :feature new-data
 
 
