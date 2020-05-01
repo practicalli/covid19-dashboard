@@ -6,7 +6,7 @@
 
 (ns practicalli.vega-lite-components
   (:require [practicalli.data-mock :as data-mock]
-            [practicalli.data-gov-uk :as data-gov-uk]))
+            [practicalli.data-gov-uk-depricated :as data-gov-uk-depricated]
 
 
 
@@ -27,7 +27,7 @@
   {:height   400
    :width    400
    :mark     "line"
-   :data     {:values data-gov-uk/covid19-uk-countries-all-cumulative-cases}
+   :data     {:values data-gov-uk-depricated/covid19-uk-countries-all-cumulative-cases}
    :encoding {:x     {:field "day" :type "quantitative"}
               :y     {:field "cases" :type "quantitative"}
               :color {:field "location" :type "nominal"}}})
@@ -50,7 +50,7 @@
 
 (def stacked-bar-uk-countries-cumulative-cases
   {:mark     "bar"
-   :data     {:values data-gov-uk/covid19-uk-countries-all-cumulative-cases}
+   :data     {:values data-gov-uk-depricated/covid19-uk-countries-all-cumulative-cases}
    :encoding {:x     {:field "day"
                       :type  "ordinal"}
               :y     {:aggregate "location"
