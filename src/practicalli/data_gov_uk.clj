@@ -32,7 +32,8 @@
 
 
 (def covid19-uk-england-combined-data
-  (extract-data-from-csv "data-sets/coronavirus-cases-UK-contry-region-local-authority-gov-uk.csv"))
+  (extract-data-from-csv "data-sets/uk-coronavirus-cases.csv"))
+
 
 
 
@@ -56,7 +57,7 @@
 ;; - passed to maximum-cases for sizing the scale of data
 (def covid19-cases-uk-local-authority-district
   (data-set-remove-locations covid19-uk-england-combined-data
-                             #{"Country" "Region"}))
+                             #{"Nation" "Country" "Region"}))
 
 
 
@@ -87,4 +88,4 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (def covid19-cases-uk-local-authority-district-date-specific
-  (data-set-specific-date covid19-cases-uk-local-authority-district "2020-04-14"))
+  (data-set-specific-date covid19-cases-uk-local-authority-district "2020-04-29"))
