@@ -1689,3 +1689,90 @@ covid-uk-daily-indicators-map
 ;; => 205
 
 
+
+
+
+;; Search for a more appropriate GeoJSON file
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Open Geography Portal
+;; https://geoportal.statistics.gov.uk/datasets/6638c31a8e9842f98a037748f72258ed_0
+;; This file contains the digital vector boundaries for Counties and Unitary Authorities (also known as Upper Tier Local Authorities) in the UK, as at 31 December 2017. The boundaries available are:
+
+;; Full resolution - extent of the realm (usually this is the Mean Low Water mark but in some cases boundaries extend beyond this to include off shore islands);
+
+;; Download GeoJSON file
+;; https://opendata.arcgis.com/datasets/6638c31a8e9842f98a037748f72258ed_0.geojson
+
+
+;; Only shows a solid blue box rather than a map
+;; irrespective of if it is a geojson or topojson
+(oz/view! {:data {:url    "/public/geo-data/Counties_and_Unitary_Authorities_December_2017_Boundaries_UK.geojson"
+                  :format {:type     "json"
+                           :property "features"}}
+           :mark "geoshape"})
+
+(oz/view!
+  {:data {:url "https://opendata.arcgis.com/datasets/6638c31a8e9842f98a037748f72258ed_0.geojson"
+
+          :format {:type    "topojson"
+                   :feature "lad"}}
+   :mark "geoshape"})
+
+
+
+
+(require '[practicalli.data-geo-json :as data-geo-json])
+
+;; Convert to Clojure
+(def open-geograhy-portal-counties-uk
+  (data-geo-json/geojson->clj "public/geo-data/Counties_and_Unitary_Authorities_December_2017_Boundaries_UK.geojson"))
+
+
+;; Get the names of each district
+(map #(get-in % [:properties :ctyua17nm] )
+     (:features open-geograhy-portal-counties-uk))
+
+
+;; Count the number of district
+(count
+  (map #(get-in % [:properties :ctyua17nm] )
+       (:features open-geograhy-portal-counties-uk)))
+;; => 217
+
+;; Remove duplicate names by placing values into a Clojure set data type
+;; If count is still the same as above, no duplicates
+(count
+  (into #{}
+        (map #(get-in % [:properties :ctyua17nm] )
+             (:features open-geograhy-portal-counties-uk))   ))
+;; => 217
+
+;; Bind the set with a name to use when comparing with Gov.uk data
+(def open-geograhy-portal-counties-uk-names
+  (into #{}
+        (map #(get-in % [:properties :ctyua17nm] )
+             (:features open-geograhy-portal-counties-uk))   ))
+
+
+;; Compare the names in the two data sets
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Find the names that appear in both data sets
+
+;; clojure.set contains functions for working with Clojure set data types
+(require 'clojure.set)
+
+
+;; Take the intersection of both data sets (names in both sets)
+;; and count the total
+(count
+  (clojure.set/intersection
+    data-gov-uk-england-names
+    open-geograhy-portal-counties-uk-names))
+;; => 148
+
+;; Ah, so only 2 items different, that looks promising
+;; unfortunately the GeoJSON file does not work with vega,
+;; it only displays a blue square.
+
+
