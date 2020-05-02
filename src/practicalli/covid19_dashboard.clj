@@ -64,19 +64,36 @@
     ]])
 
 
-
-
 (defn -main
-  "I don't do a whole lot ... yet."
-  [view]
-  (oz/view! view))
+  "Display a given Oz view"
+  []
 
-(-main dashboard-corvid19-uk)
+  ;; Data Extraction and transformation pipleline
+  (let [cases-data
+        (data-gov-uk/coronavirus-cases-data {:csv-file  "data-sets/uk-coronavirus-cases.csv"
+                                             :locations #{"Nation" "Country" "Region"}
+                                             :date      "2020-04-29"})
+
+        geojson-cases-data
+        (data-geo-json/geojson-cases-data "public/geo-data/uk-local-area-districts-administrative-martinjc-lad.json"
+                                          cases-data)]
+
+    (oz/view!
+      (dashboard-corvid19-uk (views/geo-json-view geojson-cases-data 1000)))))
 
 
 ;; View Vega-lite components
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (comment
+
+  ;; Call dashboard - depricated
+  #_(-main dashboard-corvid19-uk)
+
+  (-main)
+
+  ;; Modify -main argument list to take a map
+  ;; {:view dashboard-corvid19-uk :data-file "xxx.csv"}
+
 
   ;; Working, Gov.uk data
   (oz/view! views/line-plot-uk-countries-cumulative-cases)
@@ -91,6 +108,7 @@
   (oz/view! views/geo-map-england-full-clipped-boundaries)
 
   (oz/view! views/geo-map-uk-england-local-area-districts-date-specific)
+
   )
 
 
