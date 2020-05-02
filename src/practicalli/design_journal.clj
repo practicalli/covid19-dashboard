@@ -1831,3 +1831,93 @@ covid-uk-daily-indicators-map
 
 
 
+
+
+
+;; Refactor -main and dashboard-corvid19-uk
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Although the various def expressions were useful for building up the code,
+;; multiple expressions need to be re-evaluated when changing data.
+;; It also requires navigating through several namespaces
+
+;; Modify the -main function in the dashboard namespaces
+;; to call the relevant functions to extract and transform the data sets
+
+;; Some of the def expressions should be turned into functions to support this.
+
+
+
+
+
+;; The transformation is required for the cases data and the geojson data set.
+;; As there are several steps, this could be written using a let statement
+;; With a function call to add the data to the view.
+
+(let [cases-data
+      (data-gov-uk/coronavirus-cases-data {:csv-file  "data-sets/uk-coronavirus-cases.csv"
+                                           :locations #{"Nation" "Country" "Region"}
+                                           :date      "2020-04-29"})
+
+      geojson-cases-data
+      (data-geo-json/geojson-cases-data "public/geo-data/uk-local-area-districts-administrative-martinjc-lad.json"
+                                        cases-data)]
+
+  (oz/view!
+    (dashboard-corvid19-uk (views/geo-json-view geojson-cases-data 1000))))
+
+
+;; Or it could be written as one expression
+
+(dashboard-corvid19-uk
+  (views/geo-json-view
+    (data-geo-json/geojson-cases-data
+      "public/geo-data/uk-local-area-districts-administrative-martinjc-lad.json"
+      (data-gov-uk/coronavirus-cases-data
+        {:csv-file  "data-sets/uk-coronavirus-cases.csv"
+         :locations #{"Nation" "Country" "Region"}
+         :date      "2020-04-29"}))
+    1000))
+
+;; Or using the threading macro
+
+(-> "public/geo-data/uk-local-area-districts-administrative-martinjc-lad.json"
+    (data-geo-json/geojson-cases-data
+      (data-gov-uk/coronavirus-cases-data
+        {:csv-file  "data-sets/uk-coronavirus-cases.csv"
+         :locations #{"Nation" "Country" "Region"}
+         :date      "2020-04-29"}))
+    (views/geo-json-view
+      1000)
+    dashboard-corvid19-uk)
+
+
+;; it still looks a little dense, but with main argument variables it can be clearer
+
+(defn -main
+  [cases-data-file]
+  (-> cases-data-file
+      (data-geo-json/geojson-cases-data
+        (data-gov-uk/coronavirus-cases-data
+          {:csv-file  "data-sets/uk-coronavirus-cases.csv"
+           :locations #{"Nation" "Country" "Region"}
+           :date      "2020-04-29"}))
+      (views/geo-json-view
+        1000)
+      dashboard-corvid19-uk))
+
+
+;; Thread last is still quite nested
+(->> 1000
+     (views/geo-json-view
+       (data-geo-json/geojson-cases-data
+         "public/geo-data/uk-local-area-districts-administrative-martinjc-lad.json"
+         (data-gov-uk/coronavirus-cases-data
+           {:csv-file  "data-sets/uk-coronavirus-cases.csv"
+            :locations #{"Nation" "Country" "Region"}
+            :date      "2020-04-29"})))
+     dashboard-corvid19-uk
+     )
+
+;; Using the let approach seems to be the most readable approach in this case.
+
