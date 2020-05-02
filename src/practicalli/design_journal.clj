@@ -1606,28 +1606,28 @@ covid-uk-daily-indicators-map
 ;; Create a set of the features from the GeoJSON containing
 ;; :LAD13NM - name of the district
 
-(require 'practicalli.data-transformation)
+(require 'practicalli.data-geo-json)
 
 ;; Get the district names from the GeoJSON file
 (map #(get-in % [:properties :LAD13NM] )
-     (:features practicalli.data-transformation/england-lad-geojson-with-cases-date-specific-lad))
+     (:features practicalli.data-geo-json/england-lad-geojson-with-cases-date-specific-lad))
 
 ;; Total number of districts
 (count
   (map #(get-in % [:properties :LAD13NM] )
-       (:features practicalli.data-transformation/england-lad-geojson-with-cases-date-specific-lad)))
+       (:features practicalli.data-geo-json/england-lad-geojson-with-cases-date-specific-lad)))
 ;; => 326
 
 ;; Are they all unique?
 (into #{}
       (map #(get-in % [:properties :LAD13NM] )
-           (:features practicalli.data-transformation/england-lad-geojson-with-cases-date-specific-lad)))
+           (:features practicalli.data-geo-json/england-lad-geojson-with-cases-date-specific-lad)))
 
 ;; Yes, all unique
 (count
   (into #{}
         (map #(get-in % [:properties :LAD13NM] )
-             (:features practicalli.data-transformation/england-lad-geojson-with-cases-date-specific-lad))))
+             (:features practicalli.data-geo-json/england-lad-geojson-with-cases-date-specific-lad))))
 ;; => 326
 
 (def geojson-data-names
