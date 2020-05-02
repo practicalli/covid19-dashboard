@@ -1,30 +1,36 @@
 # covid19-dashboard
-
 A dashboard created with [Oz](https://github.com/metasoarous/oz) as an example of data science visualization.
 
 ![Covid19 tracker - Oz dashboard](resources/covid19-tracker-oz-dashboard.png)
 
 ## Installation
-
-Download from https://github.com/practicalli/covid19-dashboard.
+Clone https://github.com/practicalli/covid19-dashboard.
 
 ## Usage
-Open the `src/practicalli/design_journal.clj` file in a Clojure aware editor and start a Clojure REPL.
+From the command line using [Clojure CLI tools](https://clojure.org/guides/getting_started):
+```shell
+clojure -m practicalli.covid19-dashboard
+```
 
-Evaluate the whole namespace to ensure all data generators and views are loaded into the REPL.  A browser window will open and may display a series of different visualizations in quick succession.
+A browser window will open and display the dashboard, similar to the screenshot above.
 
-Review the code and evaluate the `(oz/view!)` expressions to see individual visualizations.
+To run in a REPL, evaluate the `practicalli.covid19-dashboard` namespace, then evaluate a call to the `-main` function, e.g. `(-main)`
+
+Read the `src/practicalli/design_journal.clj` file to follow the evolution of the design of the application.
 
 
-## General actions
+## Updating the data
+The latest covid cases and deaths data is available from https://coronavirus.data.gov.uk/
 
-Run the project directly:
+The data is typically 1 day behind and not updated on Saturday and Sunday.
 
-    $ clojure -m practicalli.covid19-dashboard
+Save new cases files to the `resources/data-sets/uk-coronavirus-cases.csv`
 
-Run the project's tests (they'll fail until you edit them):
+> NOTE: only the geojson uses the latest data.  The headline figures, line plot and bar chart use data from th 14th April.  This will be updated in the next version of the project.
 
-    $ clojure -A:test:runner
+
+## Deployment
+The project is not regarded production ready, however, should you wish to deploy use the following Clojure CLI tools commands.
 
 Build an uberjar:
 
