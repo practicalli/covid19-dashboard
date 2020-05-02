@@ -9,13 +9,11 @@
 (ns practicalli.covid19-dashboard
   (:gen-class)
   (:require
-   [oz.core                            :as oz]
-   [practicalli.vega-lite-views        :as views]
-   [practicalli.view-helpers           :as view-helpers]
-   [practicalli.data-gov-uk-depricated :as data-gov-uk-depricated]
-   [practicalli.data-gov-uk            :as data-gov-uk]
-   [practicalli.data-transform         :as data-transform]
-   [practicalli.data-geo-json          :as data-geo-json]))
+   [oz.core                     :as oz]
+   [practicalli.vega-lite-views :as views]
+   [practicalli.view-helpers    :as view-helpers]
+   [practicalli.data-gov-uk     :as data-gov-uk]
+   [practicalli.data-geo-json   :as data-geo-json]))
 
 
 (defn dashboard-corvid19-uk
