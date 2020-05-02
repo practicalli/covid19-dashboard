@@ -34,6 +34,8 @@
 (def covid19-uk-england-combined-data
   (extract-data-from-csv "data-sets/uk-coronavirus-cases.csv"))
 
+(def uk-coronavirus-cases
+  (extract-data-from-csv "data-sets/uk-coronavirus-cases.csv"))
 
 
 
@@ -87,5 +89,17 @@
 ;; Transformed Gov.uk data sets
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+#_(def covid19-cases-uk-local-authority-district-date-specific
+    (data-set-specific-date covid19-cases-uk-local-authority-district "2020-04-14"))
+
 (def covid19-cases-uk-local-authority-district-date-specific
   (data-set-specific-date covid19-cases-uk-local-authority-district "2020-04-29"))
+
+(defn coronavirus-cases-data
+  "Extract and transform cases data for specific locations and date"
+  [{:keys [csv-file locations date]}]
+  (-> (extract-data-from-csv csv-file)
+      (data-set-remove-locations locations)
+      (data-set-specific-date  date)))
+
+
