@@ -44,7 +44,7 @@
         (data-gov-uk/coronavirus-cases-data
           {:csv-file  "data-sets/uk-coronavirus-cases.csv"
            :locations #{"Nation" "Country" "Region"}
-           :date      "2020-04-29"})
+           :date      "2020-04-30"})
 
         geojson-cases-data
         (data-geo-json/geojson-cases-data
