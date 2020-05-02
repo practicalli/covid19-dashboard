@@ -4,17 +4,16 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(ns practicalli.vega-lite-components
-  (:require [practicalli.data-mock :as data-mock]
-            [practicalli.data-gov-uk-depricated :as data-gov-uk-depricated]
-
-
-
+(ns practicalli.vega-lite-views
+  (:require
+   [practicalli.data-gov-uk-depricated :as data-gov-uk-depricated]))
 
 
 
 ;; Line plot chart
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; TODO: change to function
 
 (def line-plot-uk-countries-cumulative-cases
   "Transform data for visualization"
@@ -31,6 +30,8 @@
 ;; Stacked bar chart
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; TODO: change to function
+
 (def stacked-bar-uk-countries-cumulative-cases
   {:mark     "bar"
    :data     {:values data-gov-uk-depricated/covid19-uk-countries-all-cumulative-cases}
@@ -46,21 +47,27 @@
 ;; GeoJSON view
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defn geo-json-view
+  "Geographic visualization generator
 
-(def geo-map-uk-england-local-area-districts-date-specific
+  Arguments:
+  - combined data set of GeoJSON and Cases
+  - maximum integer value for scale
+  Returns: Oz view hash-map"
+
+  [data-set max-scale]
+
   {:title    {:text "COVID19 cases in England Hospitals"}
    :height   1000
    :width    920
    :data     {:name   "England"
-              :values data-gov-uk/england-lad-geojson-with-cases-date-specific-lad
-              :format {:property "features"}},
+              :values data-set
+              :format {:type     "json"
+                       :property "features"}},
    :mark     {:type "geoshape" :stroke "white" :strokeWidth 0.5}
    :encoding {:color
               {:field "Cases",
                :type  "quantitative"
-               :scale {:domain [0 (data-gov-uk/maximum-cases
-                                    data-gov-uk/covid19-cases-uk-local-authority-district-date-specific)
-                                #_(data-gov-uk/maximum-cases data-gov-uk/gov-uk-date-specific-lad)]}}
+               :scale {:domain [0 max-scale]}}
               :tooltip [{:field "Location" :type "nominal"}
-                        {:field "Cases" :type "quantitative"}]
-              }})
+                        {:field "Cases" :type "quantitative"}]}})
