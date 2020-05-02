@@ -1776,3 +1776,58 @@ covid-uk-daily-indicators-map
 ;; it only displays a blue square.
 
 
+
+;; GeoJSON - Great Britain Local Authorities
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; https://martinjc.github.io/UK-GeoJSON/json/eng/topo_lad.json
+
+
+(oz/view!
+  {:height 400
+   :width  360
+   :data   {:url "public/geo-data/topo_lad.json"
+
+            :format {:type    "topojson"
+                     :feature "lad"}}
+   :mark "geoshape"})
+
+
+
+
+;; United Kingdom Local Area Districts (Administrative)
+;; - martinjc GitHub repository
+;;
+
+(oz/view!
+  {:height 400
+   :width  360
+   :data   {:url "https://raw.githubusercontent.com/martinjc/UK-GeoJSON/master/json/administrative/gb/lad.json"
+
+            :format {:type     "json"
+                     :property "features"}}
+   :mark "geoshape"})
+
+;; Find the number of districts
+
+(def uk-local-area-districts-administrative-martinjc
+  (data-geo-json/geojson->clj "public/geo-data/uk-local-area-districts-administrative-martinjc-lad.json"))
+
+
+(count
+  (map #(get-in % [:properties :LAD13NM] )
+       (:features uk-local-area-districts-administrative-martinjc)))
+;; => 380
+
+
+
+;; GeoJSON of Counties and Unitary Authorities
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; - Ultra Generalised Clipped Boundaries in UK (WG84)
+;; England, Scotland, Wales and Northern Ireland
+;; https://opendata.arcgis.com/datasets/658297aefddf49e49dcd5fbfc647769e_4.geojson
+;;
+;; Office for National Statistics
+;; https://geoportal.statistics.gov.uk/datasets/counties-and-unitary-authorities-december-2017-ultra-generalised-clipped-boundaries-in-uk-wgs84
+
+
+
